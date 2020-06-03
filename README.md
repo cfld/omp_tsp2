@@ -22,6 +22,13 @@ make clean; make
 ./main --inner_iters 20 --outer_iters 2 --n_reps 2 --n_threads 2
 ```
 
+## Docker
+
+```
+docker build -t omp_tsp2 .
+docker run omp_tsp2
+```
+
 ## License
 
 MIT
