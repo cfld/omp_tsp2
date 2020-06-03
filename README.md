@@ -9,7 +9,7 @@ Simple implementation of LKH3-style TSP solver w/ OMP parallelization over pertu
 ./install.sh
 
 # Convert TSPLIB to binary format
-python utils/tsplib2binary
+python utils/tsplib2binary.py
 
 # Compile omp_tsp
 make clean; make
