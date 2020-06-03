@@ -16,6 +16,7 @@ ENV PATH="/anaconda/bin:${PATH}"
 # --
 # Download and install omp_tsp2
 
+RUN echo 1
 RUN git clone https://github.com/cfld/omp_tsp2
 RUN cd /omp_tsp2 && ./install.sh && make clean && make
 
