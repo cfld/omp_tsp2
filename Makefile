@@ -7,7 +7,10 @@ LIBS += -lrt
 all: main
 
 main: src/*.cpp
-	$(CC) $(CXXFLAGS) -o main src/*.cpp
+	$(CC) $(CXXFLAGS) -Isrc/ -o main src/*.cpp
+
+mtest: src/mtest.cpp
+	$(CC) $(CXXFLAGS) -Isrc/ -o mtest src/mtest.cpp
 
 clean:
 	rm -f main
