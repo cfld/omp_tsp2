@@ -9,7 +9,8 @@ void lk_solve(
     Int* pos2node,
     Int max_depth,
     Int n_nodes,
-    Int n_near
+    Int n_near,
+    Int max_moves
 );
 
 #endif

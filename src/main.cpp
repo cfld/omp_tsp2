@@ -20,14 +20,16 @@ int main(int argc, char* argv[]) {
     // --
     // CLI
     
-    Int n_near      = 10;
-    Int max_depth   = 5;
-    int n_threads   = 1;
-    int n_reps      = 1;
-    int outer_iters = 1;
-    int inner_iters = 10;
-    int quiet       = 0;
-    parse_cmd(argc, argv, max_depth, n_near, n_threads, n_reps, outer_iters, inner_iters, quiet);
+    Int n_near       = 10;      // number of neighbors for shortlisting
+    Int max_depth    = 5;       // maximum number of edge edits in k-opt move
+    int n_threads    = 1;       // number of OMP threads
+    int n_reps       = 1;       // number of replicas (n_reps and n_threads should be equal, except for benchmarking purposes)
+    int outer_iters  = 1;       // number of synchronizations between threads
+    int inner_iters  = 10;      // number of perturbations between synchronization between threads
+    int quiet        = 0;       // print logs?
+    Int lk_max_moves = INT_MAX; // number of k-opt moves executed by one call to `lk_solve` (for benchmarking only)
+    
+    parse_cmd(argc, argv, max_depth, n_near, n_threads, n_reps, outer_iters, inner_iters, quiet, lk_max_moves);
     
     int steps = outer_iters * n_reps * inner_iters;
 
@@ -35,12 +37,12 @@ int main(int argc, char* argv[]) {
         printf("----------------\n");
         printf("max_depth   %ld \n",  max_depth);
         printf("n_near      %ld \n",  n_near);
-        printf("n_threads   %d  \n",   n_threads);
-        printf("n_reps      %d  \n",   n_reps);
-        printf("outer_iters %d  \n",   outer_iters);
-        printf("inner_iters %d  \n",   inner_iters);
-        printf("steps       %d  \n",   steps);
-        printf("quiet       %d  \n",   quiet);
+        printf("n_threads   %d  \n",  n_threads);
+        printf("n_reps      %d  \n",  n_reps);
+        printf("outer_iters %d  \n",  outer_iters);
+        printf("inner_iters %d  \n",  inner_iters);
+        printf("steps       %d  \n",  steps);
+        printf("quiet       %d  \n",  quiet);
         printf("----------------\n");
     }
 
@@ -98,7 +100,7 @@ int main(int argc, char* argv[]) {
 
             for(int inner_it = 0; inner_it < inner_iters; inner_it++) {
                 perturb::double_bridge_kick(routes[rid], n_nodes);
-                lk_solve(dist, near, routes[rid], max_depth, n_nodes, n_near);
+                lk_solve(dist, near, routes[rid], max_depth, n_nodes, n_near, lk_max_moves);
                 Int cost = route2cost(routes[rid], dist, n_nodes);
 
                 if(cost < costs[rid]) {

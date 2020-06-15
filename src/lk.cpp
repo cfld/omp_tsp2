@@ -172,7 +172,7 @@ bool lk_move(Int** dist, Int** near, Int* pos2node, Int* node2pos, Int* pres, In
     return depth != -1;
 }
 
-void lk_solve(Int** dist, Int** near, Int* pos2node, Int max_depth, Int n_nodes, Int n_near) {
+void lk_solve(Int** dist, Int** near, Int* pos2node, Int max_depth, Int n_nodes, Int n_near, Int max_moves) {
     Int* node2pos = (Int *)malloc(n_nodes * sizeof(Int));
     Int* sucs     = (Int *)malloc(n_nodes * sizeof(Int));
     Int* pres     = (Int *)malloc(n_nodes * sizeof(Int));
@@ -186,9 +186,9 @@ void lk_solve(Int** dist, Int** near, Int* pos2node, Int max_depth, Int n_nodes,
     }
 
     Int c1, c2;
+    Int n_moves = 0;
     bool any_improved = true;
     while(any_improved) {
-
         any_improved = false;
         for(Int node = 0; node < n_nodes; node++) {
             if (active[node]) {
@@ -201,6 +201,15 @@ void lk_solve(Int** dist, Int** near, Int* pos2node, Int max_depth, Int n_nodes,
                     
                     if(lk_move(dist, near, pos2node, node2pos, pres, sucs, n_nodes, n_near, c1, c2, max_depth, active)) {
                         any_improved = true;
+                        
+                        n_moves++;
+                        if(n_moves == max_moves) {
+                            free(node2pos);
+                            free(sucs);
+                            free(pres);
+                            free(active);
+                            return;
+                        };
                         break;
                     }
                 }
@@ -212,4 +221,5 @@ void lk_solve(Int** dist, Int** near, Int* pos2node, Int max_depth, Int n_nodes,
     free(sucs);
     free(pres);
     free(active);
+    return;
 }

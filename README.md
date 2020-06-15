@@ -22,6 +22,22 @@ make clean; make
 ./main --inner_iters 20 --outer_iters 2 --n_reps 2 --n_threads 2
 ```
 
+## Parameters
+
+See `src/main.cpp` for parameter documentation.
+
+## Controlling runtime
+
+There are datasets scaling several orders of magnitude in `data/tsplib`:
+```
+wc -l data/tsplib/*.tsp | sort -n -r
+```
+
+Alternatively, to get really short runs, the `inner_iters`, `outer_iters` and `lk_max_moves` parameters can be set to small values:
+```
+time ./main --inner_iters 1 --outer_iters 1 --lk_max_moves 1 
+```
+
 ## Docker
 
 ```
