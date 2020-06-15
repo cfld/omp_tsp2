@@ -33,7 +33,7 @@ def parse_args():
 if __name__ == "__main__":
     args = parse_args()
     
-    print(f'pack.py: erad from {args.inpath}', file=sys.stderr)
+    print(f'pack.py: read from {args.inpath}', file=sys.stderr)
     dist, n_nodes = load_problem(args.inpath)
     
     print(f'pack.py: write to {args.outpath}', file=sys.stderr)
