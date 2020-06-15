@@ -33,10 +33,12 @@ There are datasets scaling several orders of magnitude in `data/tsplib`:
 wc -l data/tsplib/*.tsp | sort -n -r
 ```
 
-Alternatively, to get really short runs, the `inner_iters`, `outer_iters` and `lk_max_moves` parameters can be set to small values:
+Alternatively, to get really fast runs, you can set the numbers of iterations to small values:
 ```
-time ./main --inner_iters 1 --outer_iters 1 --lk_max_moves 1 
+time ./main --inner_iters 1 --outer_iters 1 --n_reps 1 --lk_max_moves 1 
 ```
+
+`lk_max_moves` controls the number of improving moves executed inside of the `lk_solve` function.  This parameter
 
 ## Docker
 
