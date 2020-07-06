@@ -1,8 +1,8 @@
 // main.cpp
 
 #include <omp.h>
-#include <stdio.h> 
-#include <stdlib.h> 
+#include <stdio.h>
+#include <stdlib.h>
 #include <unistd.h>
 #include <bits/stdc++.h> // shuffle
 #include <time.h>
@@ -14,12 +14,12 @@
 #include "perturb.h"
 #include "parser.h"
 
-int main(int argc, char* argv[]) { 
+int main(int argc, char* argv[]) {
     srand(12345);
 
     // --
     // CLI
-    
+
     Int n_near       = 10;      // number of neighbors for shortlisting
     Int max_depth    = 5;       // maximum number of edge edits in k-opt move
     int n_threads    = 1;       // number of OMP threads
@@ -28,9 +28,9 @@ int main(int argc, char* argv[]) {
     int inner_iters  = 10;      // number of perturbations between synchronization between threads
     int quiet        = 0;       // print logs?
     Int lk_max_moves = INT_MAX; // number of k-opt moves executed by one call to `lk_solve` (for benchmarking only)
-    
+
     parse_cmd(argc, argv, max_depth, n_near, n_threads, n_reps, outer_iters, inner_iters, quiet, lk_max_moves);
-    
+
     int steps = outer_iters * n_reps * inner_iters;
 
     if(!quiet) {
@@ -50,12 +50,12 @@ int main(int argc, char* argv[]) {
 
     // --
     // IO
-    
+
     Int n_nodes;
     Int **dist;
     Int **near;
     prep::load_problem(&n_nodes, &dist, &near, n_near);
-    
+
     int route_bytes = n_nodes * sizeof(Int);
 
     // --
@@ -83,16 +83,16 @@ int main(int argc, char* argv[]) {
 
     Int** best_routes;
     malloc2d(&best_routes, n_reps, n_nodes);
-    
+
     double start_time = get_time_ms();
-    
+
     // --
     // Run optimization
-    
+
     for(int outer_it = 0; outer_it < outer_iters; outer_it++) {
         #pragma omp parallel for
         for(int rid = 0; rid < n_reps; rid++) {
-            srand(int(time(0)) ^ (rid + outer_it));
+            // srand(int(time(0)) ^ (rid + outer_it));
 
             costs[rid] = global_cost;
             memcpy(routes[rid], global_route, route_bytes);
@@ -110,7 +110,7 @@ int main(int argc, char* argv[]) {
                     memcpy(routes[rid], best_routes[rid], route_bytes);
                 }
                 if(!quiet) {
-                    printf("rid: %02d | outer_it: %03d | inner_it: %03d | costs[rid]: %ld | global_cost: %ld | elapsed: %f \n", 
+                    printf("rid: %02d | outer_it: %03d | inner_it: %03d | costs[rid]: %ld | global_cost: %ld | elapsed: %f \n",
                         rid, outer_it, inner_it, costs[rid], global_cost, (get_time_ms() - start_time));
                 }
             }

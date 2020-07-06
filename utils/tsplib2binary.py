@@ -8,7 +8,7 @@ import sys
 import argparse
 import numpy as np
 
-from simple_tsp.prep import load_problem, load_solution
+from simple_tsp.prep import load_problem, get_distance_matrix
 from simple_tsp.helpers import route2cost
 
 # --
@@ -34,7 +34,9 @@ if __name__ == "__main__":
     args = parse_args()
     
     print(f'pack.py: read from {args.inpath}', file=sys.stderr)
-    dist, n_nodes = load_problem(args.inpath)
+    prob = load_problem(args.inpath)
+    dist = get_distance_matrix(prob)
+    n_nodes = dist.shape[0]
     
     print(f'pack.py: write to {args.outpath}', file=sys.stderr)
     pack_problem(args.outpath, dist, n_nodes)

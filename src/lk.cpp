@@ -9,32 +9,7 @@
 #include "main.h"
 #include "helpers.h"
 #include "lk_checkers.h"
-
-bool edge_exists(Int u, Int v, Int n) {
-    if(u == v + 1)                 return true;
-    else if(v == u + 1)            return true;
-    else if(u == 0 and v == n - 1) return true;
-    else if(v == 0 and u == n - 1) return true;
-    else return false;
-}
-
-bool contains(Int u, Int v, Int* db, Int depth) {
-    for(Int i = 0; i < depth; i++) {
-        if(u == db[2 * i] && v == db[2 * i + 1]) return true;
-        if(v == db[2 * i] && u == db[2 * i + 1]) return true;
-    }
-    return false;
-}
-
-int fix_csh(Int rev, Int x, Int fin, Int n_nodes) {
-    if(rev) {
-        if(x > fin) return x - fin;
-        else        return n_nodes + (x - fin);
-    } else {
-        if(x > fin) return n_nodes - (x - fin);
-        else        return (fin - x);
-    }
-}
+#include "lk.h"
 
 int _lk_move(Int** dist, Int** near, Int* pos2node, Int* node2pos, Int* cs, Int* csh, Int* new_edges, Int* old_edges, Int saving, Int n_nodes, Int n_near, Int depth, Int max_depth) {
     Int fin  = cs[0];
@@ -46,7 +21,7 @@ int _lk_move(Int** dist, Int** near, Int* pos2node, Int* node2pos, Int* cs, Int*
     Int* act_near_pos = near[pos2node[act]];
     for(Int i = 0; i < n_near; i++) {
         cp1 = node2pos[act_near_pos[i]];
-        
+
         // if(cp1 == -1)                            continue;
         if(cp1 == fin)                           continue;
         if(cp1 == act)                           continue;
@@ -85,7 +60,7 @@ int _lk_move(Int** dist, Int** near, Int* pos2node, Int* node2pos, Int* cs, Int*
                             if(check4(csh)) return depth;
                         } else if (depth == 3) {
                             if(check5(csh)) return depth;
-                        }   
+                        }
                     }
                 }
 
@@ -108,7 +83,7 @@ void execute_move(Int *cs, Int depth, Int* pos2node, Int* node2pos, Int* pres, I
     Int max_cs = -1;
     Int min_cs = 99999;
     for(Int i = 0; i < cs_length; i++) {
-        
+
         a = pos2node[cs[mod(i - 1, cs_length)]];
         b = pos2node[cs[i]];
         c = pos2node[cs[mod(i + 1, cs_length)]];
@@ -123,13 +98,13 @@ void execute_move(Int *cs, Int depth, Int* pos2node, Int* node2pos, Int* pres, I
 
         if(cs[i] > max_cs) max_cs = cs[i];
         if(cs[i] < min_cs) min_cs = cs[i];
-        
+
         active[b] = true;
     }
 
     Int last = pos2node[mod(min_cs - 1, n_nodes)];
     Int curr = pos2node[min_cs];
-    
+
     for(Int step = min_cs; step < max_cs + 1; step++) {
         pos2node[step] = curr;
         node2pos[curr] = step;
@@ -149,12 +124,12 @@ bool lk_move(Int** dist, Int** near, Int* pos2node, Int* node2pos, Int* pres, In
     Int* csh       = (Int *)malloc(2 * max_depth * sizeof(Int));
     Int* new_edges = (Int *)malloc(2 * (max_depth - 1) * sizeof(Int));
     Int* old_edges = (Int *)malloc(2 * max_depth * sizeof(Int));
-    
+
     cs[0]  = c1;
     cs[1]  = c2;
     csh[0] = 0;
     csh[1] = 1;
-    
+
     old_edges[0] = c1;
     old_edges[1] = c2;
 
@@ -195,13 +170,13 @@ void lk_solve(Int** dist, Int** near, Int* pos2node, Int max_depth, Int n_nodes,
                 active[node] = false;
 
                 c1 = node2pos[node];
-                
+
                 for(int dir = 0; dir <= 1; dir++) {
                     c2 = (dir == 0) ? mod(c1 - 1, n_nodes) : mod(c1 + 1, n_nodes);
-                    
+
                     if(lk_move(dist, near, pos2node, node2pos, pres, sucs, n_nodes, n_near, c1, c2, max_depth, active)) {
                         any_improved = true;
-                        
+
                         n_moves++;
                         if(n_moves == max_moves) {
                             free(node2pos);
