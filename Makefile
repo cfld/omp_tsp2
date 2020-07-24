@@ -1,7 +1,7 @@
 # Makefile
 
 CC = g++
-CXXFLAGS += -std=c++11 -mtune=native -march=native -Wall -O3 -DNDEBUG -fopenmp
+CXXFLAGS += -std=c++11 -mtune=native -march=native -Wall -O3 -DNDEBUG -fopenmp -g
 LIBS += -lrt
 
 all: main
